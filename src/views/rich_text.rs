@@ -34,7 +34,7 @@ pub fn rich_text(
     // Initialize the layout data with the text and attrs
     {
         let mut data = layout_data.borrow_mut();
-        data.set_text(&text, attrs_list, None);
+        data.set_text(&text, attrs_list, Default::default());
         data.set_text_overflow(crate::style::TextOverflow::Wrap {
             overflow_wrap: crate::text::OverflowWrap::Normal,
             word_break: crate::text::WordBreak::Normal,
@@ -115,7 +115,7 @@ impl View for RichText {
             let (text, attrs_list) = *state;
 
             let mut data = self.layout_data.borrow_mut();
-            data.set_text(&text, attrs_list, None);
+            data.set_text(&text, attrs_list, Default::default());
             data.set_text_overflow(crate::style::TextOverflow::Wrap {
                 overflow_wrap: crate::text::OverflowWrap::Normal,
                 word_break: crate::text::WordBreak::Normal,

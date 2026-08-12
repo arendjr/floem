@@ -11,6 +11,7 @@ use crate::{
         TextAlignProp, TextColor,
     },
     style_class,
+    text::TextOptions,
     view::LayoutNodeCx,
 };
 use floem_reactive::{Effect, SignalGet, SignalTrack, SignalUpdate, SignalWith};
@@ -652,14 +653,15 @@ impl TextInput {
 
         if let (Some(placeholder_text), true) = (&self.placeholder_text, buffer_is_empty) {
             let attrs_list = self.get_placeholder_text_attrs();
-            let align = self.placeholder_style.text_align();
+            let options =
+                TextOptions::default().with_alignment(self.placeholder_style.text_align());
 
             let mut layout_data = self.layout_data.borrow_mut();
-            layout_data.set_text(placeholder_text, attrs_list, align);
+            layout_data.set_text(placeholder_text, attrs_list, options);
             layout_data.set_text_overflow(TextOverflow::NoWrap(crate::style::NoWrapOverflow::Clip));
         } else {
             let attrs_list = self.get_text_attrs();
-            let align = self.style.text_align();
+            let options = TextOptions::default().with_alignment(self.style.text_align());
             self.buffer.with_untracked(|buff| {
                 let preedited;
                 let display_text = if let Some(preedit) = &self.preedit {
@@ -678,7 +680,7 @@ impl TextInput {
                 };
 
                 let mut layout_data = self.layout_data.borrow_mut();
-                layout_data.set_text(display_text, attrs_list, align);
+                layout_data.set_text(display_text, attrs_list, options);
                 layout_data
                     .set_text_overflow(TextOverflow::NoWrap(crate::style::NoWrapOverflow::Clip));
             });

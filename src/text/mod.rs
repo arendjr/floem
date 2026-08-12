@@ -18,7 +18,7 @@ pub use floem_renderer::text::{
     Attrs, AttrsList, AttrsOwned, FamilyOwned, FontStyle, FontWeight, FontWidth, Glyph,
     GlyphRunProps, LineHeightValue, NormalizedCoord,
 };
-pub use layout::{FONT_CONTEXT, TextLayout, TextSelection};
+pub use layout::{FONT_CONTEXT, TextLayout, TextOptions, TextSelection};
 pub use layout_state::{TextLayoutState, TextOverflowChanged};
 pub use parley::Alignment;
 pub use parley::layout::{Affinity, Cursor, Selection};

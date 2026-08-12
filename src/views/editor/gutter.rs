@@ -164,9 +164,13 @@ impl View for EditorGutterView {
 
                 let mut text_layout = TextLayout::new();
                 if line == current_line {
-                    text_layout.set_text(&text, current_line_attrs_list.clone(), None);
+                    text_layout.set_text(
+                        &text,
+                        current_line_attrs_list.clone(),
+                        Default::default(),
+                    );
                 } else {
-                    text_layout.set_text(&text, attrs_list.clone(), None);
+                    text_layout.set_text(&text, attrs_list.clone(), Default::default());
                 }
                 let size = text_layout.size();
                 let height = size.height;
@@ -264,7 +268,11 @@ impl EditorGutterView {
     fn compute_widest_text_width(editor: RwSignal<Editor>, attrs_list: &AttrsList) -> f64 {
         let last_line = editor.get_untracked().last_line() + 1;
         let mut text = TextLayout::new();
-        text.set_text(&last_line.to_string(), attrs_list.clone(), None);
+        text.set_text(
+            &last_line.to_string(),
+            attrs_list.clone(),
+            Default::default(),
+        );
         text.size().width
     }
 }

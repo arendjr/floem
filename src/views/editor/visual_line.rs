@@ -2082,7 +2082,7 @@ mod tests {
             }
 
             let mut text_layout = TextLayout::new();
-            text_layout.set_text(&line_content, attrs_list, None);
+            text_layout.set_text(&line_content, attrs_list, Default::default());
 
             match wrap {
                 ResolvedWrap::None => {}
@@ -3370,7 +3370,7 @@ mod tests {
     fn layout_cols() {
         let text = Rope::from("aaaa\nbb bb cc\ndd");
         let mut layout = TextLayout::new();
-        layout.set_text("aaaa", AttrsList::new(Attrs::new()), None);
+        layout.set_text("aaaa", AttrsList::new(Attrs::new()), Default::default());
         let layout = TextLayoutLine {
             extra_style: Vec::new(),
             text: layout,
@@ -3392,7 +3392,7 @@ mod tests {
 
         let text = Rope::from("aaaa\r\nbb bb cc\r\ndd");
         let mut layout = TextLayout::new();
-        layout.set_text("aaaa", AttrsList::new(Attrs::new()), None);
+        layout.set_text("aaaa", AttrsList::new(Attrs::new()), Default::default());
         let layout = TextLayoutLine {
             extra_style: Vec::new(),
             text: layout,
@@ -3420,7 +3420,7 @@ mod tests {
         // Simple single-line, no wrapping.
         let text = Rope::from("aaaa\nbb bb cc\ndd");
         let mut tl = TextLayout::new();
-        tl.set_text("aaaa", AttrsList::new(Attrs::new()), None);
+        tl.set_text("aaaa", AttrsList::new(Attrs::new()), Default::default());
         let layout = TextLayoutLine {
             extra_style: Vec::new(),
             text: tl,
@@ -3445,7 +3445,7 @@ mod tests {
         // CRLF line endings.
         let text = Rope::from("aaaa\r\nbb bb cc\r\ndd");
         let mut tl = TextLayout::new();
-        tl.set_text("aaaa", AttrsList::new(Attrs::new()), None);
+        tl.set_text("aaaa", AttrsList::new(Attrs::new()), Default::default());
         let layout = TextLayoutLine {
             extra_style: Vec::new(),
             text: tl,
@@ -3464,7 +3464,7 @@ mod tests {
     #[test]
     fn start_layout_cols_whitespace_only() {
         let mut tl = TextLayout::new();
-        tl.set_text("    ", AttrsList::new(Attrs::new()), None);
+        tl.set_text("    ", AttrsList::new(Attrs::new()), Default::default());
         let layout = TextLayoutLine {
             extra_style: Vec::new(),
             text: tl,

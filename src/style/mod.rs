@@ -2030,6 +2030,9 @@ define_builtin_props!(
     /// Controls horizontal alignment of text content.
     TextAlignProp text_align {}: Option<crate::text::Alignment> [crate::text::Alignment] {} = None,
 
+    /// Sets text indentation for the first line of the text.
+    TextIndent text_indent {}: Option<f32> [f32] {} = None,
+
     /// Sets the line height for text content.
     ///
     /// This property is inherited by child views.

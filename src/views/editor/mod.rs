@@ -1417,7 +1417,7 @@ impl TextLayoutProvider for Editor {
         let mut text_layout = TextLayout::new();
         // TODO: we could move tab width setting to be done by the document
         text_layout.set_tab_width(style.tab_width(edid, line));
-        text_layout.set_text(&line_content, attrs_list, None);
+        text_layout.set_text(&line_content, attrs_list, Default::default());
 
         match self.es.with(|s| s.wrap_method()) {
             WrapMethod::None => {}

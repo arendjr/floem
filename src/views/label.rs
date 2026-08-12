@@ -8,13 +8,13 @@ use crate::{
     prop_extractor,
     style::{
         ContextValue, CustomStylable, CustomStyle, ExprStyle, FontProps, LineHeight, Selectable,
-        SelectionCornerRadius, SelectionStyle, Style, TextAlignProp, TextColor, TextOverflow,
-        TextOverflowProp,
+        SelectionCornerRadius, SelectionStyle, Style, TextAlignProp, TextColor, TextIndent,
+        TextOverflow, TextOverflowProp,
     },
     style_class,
     text::{
-        Attrs, AttrsList, Cursor, FamilyOwned, TextLayout, TextLayoutState, TextSelection,
-        WordBreak,
+        Attrs, AttrsList, Cursor, FamilyOwned, TextLayout, TextLayoutState, TextOptions,
+        TextSelection, WordBreak,
     },
     view::{LayoutNodeCx, View},
     views::editor::SelectionColor,
@@ -40,6 +40,7 @@ prop_extractor! {
         line_height: LineHeight,
         text_selectable: Selectable,
         text_align: TextAlignProp,
+        text_indent: TextIndent,
     }
 }
 
@@ -247,11 +248,14 @@ impl Label {
 
     fn set_text_layout(&mut self) {
         let attrs_list = self.get_attrs_list();
-        let align = self.label_props.text_align();
+        let options = TextOptions {
+            alignment: self.label_props.text_align(),
+            indent: self.label_props.text_indent(),
+        };
         let text_overflow = self.label_props.text_overflow();
 
         let mut layout_data = self.layout_data.borrow_mut();
-        layout_data.set_text(&self.label, attrs_list, align);
+        layout_data.set_text(&self.label, attrs_list, options);
         layout_data.set_text_overflow(text_overflow);
 
         self.mark_text_measure_dirty();

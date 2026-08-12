@@ -10,7 +10,7 @@ use floem_renderer::Renderer as _;
 use floem_renderer::text::{AttrsList, GlyphRunProps, TextBrush};
 use parking_lot::Mutex;
 use parley::{
-    Affinity, Alignment, Cursor, FontContext, LayoutContext, Selection,
+    Affinity, Alignment, Cursor, FontContext, IndentOptions, LayoutContext, Selection,
     layout::{AlignmentOptions, Layout},
     style::{OverflowWrap, StyleProperty, TextWrapMode},
 };
@@ -138,6 +138,24 @@ fn expand_tabs(text: &str, tab_width: usize) -> Option<TabInfo> {
     })
 }
 
+#[derive(Clone, Default)]
+pub struct TextOptions {
+    pub alignment: Option<Alignment>,
+    pub indent: Option<f32>,
+}
+
+impl TextOptions {
+    pub fn with_alignment(mut self, alignment: Option<Alignment>) -> Self {
+        self.alignment = alignment;
+        self
+    }
+
+    pub fn with_indent(mut self, indent: Option<f32>) -> Self {
+        self.indent = indent;
+        self
+    }
+}
+
 #[derive(Clone)]
 /// A Floem wrapper around a Parley text layout.
 ///
@@ -155,6 +173,7 @@ pub struct TextLayout {
     layout: Layout<TextBrush>,
     text: String,
     alignment: Option<Alignment>,
+    indent: Option<f32>,
     text_wrap_mode: TextWrapMode,
     overflow_wrap: OverflowWrap,
     width_opt: Option<f32>,
@@ -356,6 +375,11 @@ impl TextLayout {
         if let Some(align) = self.alignment {
             self.layout.align(align, AlignmentOptions::default());
         }
+
+        if let Some(indent) = self.indent {
+            self.layout
+                .set_text_indent(indent, IndentOptions::default());
+        }
     }
 
     /// Creates an empty text layout with Floem's default wrapping settings.
@@ -364,6 +388,7 @@ impl TextLayout {
             layout: Layout::new(),
             text: String::new(),
             alignment: None,
+            indent: None,
             text_wrap_mode: TextWrapMode::Wrap,
             overflow_wrap: OverflowWrap::Normal,
             width_opt: None,
@@ -374,9 +399,9 @@ impl TextLayout {
     }
 
     /// Creates a new layout and immediately sets its text and attributes.
-    pub fn new_with_text(text: &str, attrs_list: AttrsList, align: Option<Alignment>) -> Self {
+    pub fn new_with_text(text: &str, attrs_list: AttrsList) -> Self {
         let mut layout = Self::new();
-        layout.set_text(text, attrs_list, align);
+        layout.set_text(text, attrs_list, Default::default());
         layout
     }
 
@@ -384,9 +409,10 @@ impl TextLayout {
     ///
     /// This rebuilds the underlying Parley layout and reapplies the current
     /// wrapping configuration.
-    pub fn set_text(&mut self, text: &str, attrs_list: AttrsList, align: Option<Alignment>) {
+    pub fn set_text(&mut self, text: &str, attrs_list: AttrsList, options: TextOptions) {
         self.text = text.to_string();
-        self.alignment = align;
+        self.alignment = options.alignment;
+        self.indent = options.indent;
         self.tab_info = self
             .tab_width
             .and_then(|w| expand_tabs(text, w.get() as usize));

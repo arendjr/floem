@@ -81,7 +81,7 @@ fn make_layout_line(text: &str, wrap_width: f32) -> TextLayoutLine {
 
     let mut text_layout = TextLayout::new();
     text_layout.set_text_wrap_mode(TextWrapMode::Wrap);
-    text_layout.set_text(text, attrs_list, None);
+    text_layout.set_text(text, attrs_list, Default::default());
     text_layout.set_size(wrap_width, f32::MAX);
 
     TextLayoutLine {
