@@ -889,7 +889,7 @@ impl EditorView {
         let attrs_list = AttrsList::new(attrs);
 
         let mut indent_text = TextLayout::new();
-        indent_text.set_text(&format!("{indent_unit}a"), attrs_list, None);
+        indent_text.set_text(&format!("{indent_unit}a"), attrs_list, Default::default());
         let indent_text_width = indent_text
             .cursor_point(indent_unit.len(), Affinity::Upstream)
             .x;
@@ -930,9 +930,9 @@ impl EditorView {
             .font_size(style.font_size(edid, 0) as f32);
         let ws_attrs_list = AttrsList::new(ws_attrs);
         let mut space_text = TextLayout::new();
-        space_text.set_text("·", ws_attrs_list.clone(), None);
+        space_text.set_text("·", ws_attrs_list.clone(), Default::default());
         let mut tab_text = TextLayout::new();
-        tab_text.set_text("→", ws_attrs_list, None);
+        tab_text.set_text("→", ws_attrs_list, Default::default());
 
         for (line, y) in screen_lines.iter_lines_y() {
             let text_layout = ed.text_layout(line);

@@ -122,7 +122,7 @@ fn bench_layout_creation(c: &mut Criterion) {
     group.bench_function("short_plain", |b| {
         b.iter(|| {
             let mut layout = TextLayout::new();
-            layout.set_text(SHORT, default_attrs(), None);
+            layout.set_text(SHORT, default_attrs(), Default::default());
             black_box(&layout);
         });
     });
@@ -131,7 +131,7 @@ fn bench_layout_creation(c: &mut Criterion) {
     group.bench_function("sentence_plain", |b| {
         b.iter(|| {
             let mut layout = TextLayout::new();
-            layout.set_text(SENTENCE, default_attrs(), None);
+            layout.set_text(SENTENCE, default_attrs(), Default::default());
             black_box(&layout);
         });
     });
@@ -140,7 +140,7 @@ fn bench_layout_creation(c: &mut Criterion) {
     group.bench_function("paragraph_wrap", |b| {
         b.iter(|| {
             let mut layout = TextLayout::new();
-            layout.set_text(PARAGRAPH, default_attrs(), None);
+            layout.set_text(PARAGRAPH, default_attrs(), Default::default());
             layout.set_size(400.0, f32::MAX);
             black_box(&layout);
         });
@@ -150,7 +150,7 @@ fn bench_layout_creation(c: &mut Criterion) {
     group.bench_function("arabic_wrap", |b| {
         b.iter(|| {
             let mut layout = TextLayout::new();
-            layout.set_text(ARABIC, default_attrs(), None);
+            layout.set_text(ARABIC, default_attrs(), Default::default());
             layout.set_size(400.0, f32::MAX);
             black_box(&layout);
         });
@@ -160,7 +160,7 @@ fn bench_layout_creation(c: &mut Criterion) {
     group.bench_function("mixed_bidi_wrap", |b| {
         b.iter(|| {
             let mut layout = TextLayout::new();
-            layout.set_text(MIXED_BIDI, default_attrs(), None);
+            layout.set_text(MIXED_BIDI, default_attrs(), Default::default());
             layout.set_size(400.0, f32::MAX);
             black_box(&layout);
         });
@@ -170,7 +170,7 @@ fn bench_layout_creation(c: &mut Criterion) {
     group.bench_function("emoji_wrap", |b| {
         b.iter(|| {
             let mut layout = TextLayout::new();
-            layout.set_text(EMOJI, default_attrs(), None);
+            layout.set_text(EMOJI, default_attrs(), Default::default());
             layout.set_size(400.0, f32::MAX);
             black_box(&layout);
         });
@@ -181,7 +181,7 @@ fn bench_layout_creation(c: &mut Criterion) {
     group.bench_function("multi_paragraph_wrap", |b| {
         b.iter(|| {
             let mut layout = TextLayout::new();
-            layout.set_text(&mp, default_attrs(), None);
+            layout.set_text(&mp, default_attrs(), Default::default());
             layout.set_size(400.0, f32::MAX);
             black_box(&layout);
         });
@@ -192,7 +192,7 @@ fn bench_layout_creation(c: &mut Criterion) {
     group.bench_function("long_document_wrap", |b| {
         b.iter(|| {
             let mut layout = TextLayout::new();
-            layout.set_text(&ld, default_attrs(), None);
+            layout.set_text(&ld, default_attrs(), Default::default());
             layout.set_size(600.0, f32::MAX);
             black_box(&layout);
         });
@@ -214,7 +214,7 @@ fn bench_styled_layout(c: &mut Criterion) {
             let attrs = styled_attrs(PARAGRAPH.len(), span_count);
             b.iter(|| {
                 let mut layout = TextLayout::new();
-                layout.set_text(PARAGRAPH, attrs.clone(), None);
+                layout.set_text(PARAGRAPH, attrs.clone(), Default::default());
                 layout.set_size(400.0, f32::MAX);
                 black_box(&layout);
             });
@@ -240,7 +240,7 @@ fn bench_line_breaking(c: &mut Criterion) {
     ] {
         group.bench_function(name, |b| {
             let mut layout = TextLayout::new();
-            layout.set_text(PARAGRAPH, default_attrs(), None);
+            layout.set_text(PARAGRAPH, default_attrs(), Default::default());
             let mut toggle = false;
             b.iter(|| {
                 let w = if toggle { width } else { width + 100.0 };
@@ -254,7 +254,7 @@ fn bench_line_breaking(c: &mut Criterion) {
     // Early-return path: same width repeated (measures the guard check)
     group.bench_function("same_width_noop", |b| {
         let mut layout = TextLayout::new();
-        layout.set_text(PARAGRAPH, default_attrs(), None);
+        layout.set_text(PARAGRAPH, default_attrs(), Default::default());
         layout.set_size(400.0, f32::MAX);
         b.iter(|| {
             layout.set_size(400.0, f32::MAX);
@@ -274,7 +274,7 @@ fn bench_hit_testing(c: &mut Criterion) {
     let mut group = c.benchmark_group("hit_testing");
 
     let mut layout = TextLayout::new();
-    layout.set_text(PARAGRAPH, default_attrs(), None);
+    layout.set_text(PARAGRAPH, default_attrs(), Default::default());
     layout.set_size(400.0, f32::MAX);
     let size = layout.size();
     let text_len = PARAGRAPH.len();
@@ -303,7 +303,7 @@ fn bench_hit_testing(c: &mut Criterion) {
 
     // Hit testing on BiDi text
     let mut bidi_layout = TextLayout::new();
-    bidi_layout.set_text(MIXED_BIDI, default_attrs(), None);
+    bidi_layout.set_text(MIXED_BIDI, default_attrs(), Default::default());
     bidi_layout.set_size(400.0, f32::MAX);
     let bidi_size = bidi_layout.size();
     group.bench_function("hit_middle_bidi", |b| {
@@ -356,7 +356,7 @@ fn bench_selection(c: &mut Criterion) {
     let mut group = c.benchmark_group("selection");
 
     let mut layout = TextLayout::new();
-    layout.set_text(PARAGRAPH, default_attrs(), None);
+    layout.set_text(PARAGRAPH, default_attrs(), Default::default());
     layout.set_size(400.0, f32::MAX);
     let len = PARAGRAPH.len();
 
@@ -417,7 +417,7 @@ fn bench_visual_lines(c: &mut Criterion) {
     let mut group = c.benchmark_group("visual_lines");
 
     let mut layout = TextLayout::new();
-    layout.set_text(PARAGRAPH, default_attrs(), None);
+    layout.set_text(PARAGRAPH, default_attrs(), Default::default());
     layout.set_size(400.0, f32::MAX);
 
     group.bench_function("iterate_lines", |b| {
@@ -456,7 +456,7 @@ fn bench_stress(c: &mut Criterion) {
     group.bench_function("large_document_50para", |b| {
         b.iter(|| {
             let mut layout = TextLayout::new();
-            layout.set_text(&big, default_attrs(), None);
+            layout.set_text(&big, default_attrs(), Default::default());
             layout.set_size(600.0, f32::MAX);
             black_box(&layout);
         });
@@ -473,7 +473,7 @@ fn bench_stress(c: &mut Criterion) {
     group.bench_function("combined_scripts", |b| {
         b.iter(|| {
             let mut layout = TextLayout::new();
-            layout.set_text(&combined, default_attrs(), None);
+            layout.set_text(&combined, default_attrs(), Default::default());
             layout.set_size(500.0, f32::MAX);
             black_box(&layout);
         });
@@ -487,7 +487,7 @@ fn bench_stress(c: &mut Criterion) {
     group.bench_function("layout_heavy_wrap", |b| {
         b.iter(|| {
             let mut layout = TextLayout::new();
-            layout.set_text(&heavy, default_attrs(), None);
+            layout.set_text(&heavy, default_attrs(), Default::default());
             layout.set_size(500.0, f32::MAX);
             black_box(&layout);
         });

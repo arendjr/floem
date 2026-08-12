@@ -2,6 +2,7 @@ use floem::{
     prelude::*,
     text::{Alignment, FontStyle, FontWeight},
     theme::StyleThemeExt,
+    unit::LengthAuto,
 };
 
 use crate::form::{form, form_item};
@@ -15,8 +16,12 @@ pub fn label_view() -> impl IntoView {
         ),
         form_item(
             "Styled Label:",
-            "This is a styled label".style(|s| {
+            "This is a styled label with a pretty long text so that you can see text options such as alignment and indentation in action".style(|s| {
                 s.background(palette::css::YELLOW)
+                    .width(LengthAuto::Pt(800.))
+                    .text_align(Alignment::Justify)
+                    .text_indent(50.)
+                    .text_wrap()
                     .padding(10.0)
                     .color(palette::css::GREEN)
                     .font_weight(FontWeight::BOLD)

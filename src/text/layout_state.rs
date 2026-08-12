@@ -8,10 +8,11 @@ use crate::{
     custom_event,
     event::Event,
     style::{NoWrapOverflow, TextOverflow},
+    text::layout::TextOptions,
     view::{FinalizeFn, MeasureFn},
 };
 
-use super::{Alignment, Attrs, AttrsList, TextLayout, TextSelection, TextWrapMode};
+use super::{Attrs, AttrsList, TextLayout, TextSelection, TextWrapMode};
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 enum AvailableLayoutKind {
@@ -40,7 +41,7 @@ pub struct TextLayoutState {
     available_text_layout: Option<TextLayout>,
     available_layout_kind: Option<AvailableLayoutKind>,
     attrs_list: AttrsList,
-    text_align: Option<Alignment>,
+    text_options: TextOptions,
     text_overflow: TextOverflow,
     last_overflow_state: Option<bool>,
     view_id: Option<ViewId>,
@@ -55,7 +56,7 @@ impl TextLayoutState {
             available_text_layout: None,
             available_layout_kind: None,
             attrs_list: AttrsList::new(Attrs::new()),
-            text_align: None,
+            text_options: TextOptions::default(),
             text_overflow: TextOverflow::NoWrap(NoWrapOverflow::Clip),
             last_overflow_state: None,
             view_id,
@@ -63,13 +64,13 @@ impl TextLayoutState {
     }
 
     /// Replaces the base text, attributes, and alignment for this state.
-    pub fn set_text(&mut self, text: &str, attrs_list: AttrsList, text_align: Option<Alignment>) {
+    pub fn set_text(&mut self, text: &str, attrs_list: AttrsList, options: TextOptions) {
         self.attrs_list = attrs_list.clone();
-        self.text_align = text_align;
+        self.text_options = options.clone();
 
         let mut text_layout = TextLayout::new();
         self.apply_text_overflow(&mut text_layout);
-        text_layout.set_text(text, attrs_list, text_align);
+        text_layout.set_text(text, attrs_list, options);
         self.text_layout = Some(text_layout);
         self.clear_overflow_state();
     }
@@ -81,7 +82,11 @@ impl TextLayoutState {
             if let Some(current_text) = self.text().map(str::to_owned) {
                 let mut text_layout = TextLayout::new();
                 self.apply_text_overflow(&mut text_layout);
-                text_layout.set_text(&current_text, self.attrs_list.clone(), self.text_align);
+                text_layout.set_text(
+                    &current_text,
+                    self.attrs_list.clone(),
+                    self.text_options.clone(),
+                );
                 self.text_layout = Some(text_layout);
             }
             self.clear_overflow_state();
@@ -117,7 +122,7 @@ impl TextLayoutState {
     fn build_layout(&self, text: &str) -> TextLayout {
         let mut layout = TextLayout::new();
         self.apply_text_overflow(&mut layout);
-        layout.set_text(text, self.attrs_list.clone(), self.text_align);
+        layout.set_text(text, self.attrs_list.clone(), self.text_options.clone());
         layout
     }
 
@@ -271,7 +276,7 @@ impl TextLayoutState {
         self.last_overflow_state = Some(overflows);
 
         if !overflows {
-            if self.text_align.is_some() {
+            if self.text_options.alignment.is_some() {
                 let needs_rebuild = self.available_width != Some(final_width)
                     || self.available_text_layout.is_none()
                     || self.available_layout_kind != Some(AvailableLayoutKind::Aligned);
@@ -405,9 +410,11 @@ mod tests {
     #[test]
     fn taffy_layout_updates_after_text_change_for_measured_text_child() {
         let layout_data = Rc::new(RefCell::new(TextLayoutState::new(None)));
-        layout_data
-            .borrow_mut()
-            .set_text("short", AttrsList::new(Attrs::new()), None);
+        layout_data.borrow_mut().set_text(
+            "short",
+            AttrsList::new(Attrs::new()),
+            Default::default(),
+        );
         layout_data
             .borrow_mut()
             .set_text_overflow(TextOverflow::NoWrap(NoWrapOverflow::Clip));
@@ -458,7 +465,7 @@ mod tests {
             layout_data.borrow_mut().set_text(
                 "a much longer piece of text",
                 AttrsList::new(Attrs::new()),
-                None,
+                Default::default(),
             );
 
             taffy.mark_dirty(text).unwrap();

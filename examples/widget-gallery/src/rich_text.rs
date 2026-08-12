@@ -12,7 +12,7 @@ pub fn rich_text_view() -> impl IntoView {
         "This".red().italic() + " is rich text".blue() + "\nTest value: " + 5.to_string().green();
 
     let text = "
-    // floem is a ui lib, homepage https://github.com/lapce/floem
+    // floem is a ui lib, homepage https://github.com/lapce/floem and now with a really long \nstring that should wrap around and stuff so that I can see what this does.
     fn main() {
         println(\"Hello World!\");
     }";
